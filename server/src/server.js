@@ -53,10 +53,10 @@ app.use((err, req, res, next) => {
 // Connect to MongoDB and start server
 async function start() {
   try {
-    await mongoose.connect(process.env.MONGODB_URI);
+    await mongoose.connect(process.env.MONGODB_URI, { serverSelectionTimeoutMS: 2000 });
     console.log('✅ MongoDB connected');
   } catch (err) {
-    console.warn('⚠️  MongoDB not available — running without database:', err.message);
+    console.warn('⚠️  MongoDB not available — running in offline/demo mode:', err.message);
   }
 
   app.listen(PORT, () => {

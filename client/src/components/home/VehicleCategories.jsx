@@ -1,120 +1,142 @@
-import { Car, Bike, Truck, Crown, Zap, ArrowRight } from 'lucide-react';
+import { Car, Bike, Truck, Crown, Zap, ArrowRight, Sparkles } from 'lucide-react';
 
 const categories = [
   {
     name: 'Hatchback',
     icon: Car,
     count: 1840,
-    description: 'Compact & fuel-efficient city rides',
-    color: 'from-blue-500 to-blue-600',
-    bgLight: 'bg-blue-50',
+    description: 'Agile, compact & budget-friendly. Perfect for swift city commutes and tight parking.',
+    color: 'from-blue-500 to-electric',
+    bgLight: 'bg-blue-50/80',
     textColor: 'text-blue-600',
-    startingPrice: 800,
+    startingPrice: '800',
+    popularModel: 'Swift, i20, Tiago',
   },
   {
     name: 'Sedan',
     icon: Car,
     count: 1560,
-    description: 'Comfortable rides for long journeys',
-    color: 'from-emerald-500 to-emerald-600',
-    bgLight: 'bg-emerald-50',
+    description: 'Plush comfort, refined suspension & ample boot space for highway cruises and family trips.',
+    color: 'from-emerald-500 to-teal-500',
+    bgLight: 'bg-emerald-50/80',
     textColor: 'text-emerald-600',
-    startingPrice: 1200,
+    startingPrice: '1,200',
+    popularModel: 'City, Verna, Ciaz',
   },
   {
-    name: 'SUV',
+    name: 'SUV & MUV',
     icon: Truck,
     count: 2100,
-    description: 'Spacious & powerful for every terrain',
-    color: 'from-orange-500 to-orange-600',
-    bgLight: 'bg-orange-50',
+    description: 'High ground clearance, commanding road view & power for getaways and hill drives.',
+    color: 'from-orange-500 to-amber-500',
+    bgLight: 'bg-orange-50/80',
     textColor: 'text-orange-600',
-    startingPrice: 1800,
+    startingPrice: '1,800',
+    popularModel: 'Creta, Thar, Scorpio',
   },
   {
-    name: 'Luxury',
+    name: 'Luxury & Premium',
     icon: Crown,
     count: 420,
-    description: 'Premium experiences on wheels',
-    color: 'from-purple-500 to-purple-600',
-    bgLight: 'bg-purple-50',
+    description: 'Executive class luxury, leather interiors, and unmatched prestige for special occasions.',
+    color: 'from-purple-500 to-indigo-600',
+    bgLight: 'bg-purple-50/80',
     textColor: 'text-purple-600',
-    startingPrice: 5000,
+    startingPrice: '5,000',
+    popularModel: 'BMW 3, Mercedes C-Class',
   },
   {
-    name: 'Electric',
+    name: 'Electric Vehicles (EV)',
     icon: Zap,
     count: 340,
-    description: 'Eco-friendly zero-emission rides',
-    color: 'from-teal-500 to-teal-600',
-    bgLight: 'bg-teal-50',
+    description: 'Silent, instant acceleration and zero tailpipe emissions with home & fast-charging support.',
+    color: 'from-teal-500 to-cyan-500',
+    bgLight: 'bg-teal-50/80',
     textColor: 'text-teal-600',
-    startingPrice: 1500,
+    startingPrice: '1,500',
+    popularModel: 'Nexon EV, ZS EV, Ioniq 5',
   },
   {
-    name: 'Bike / Scooter',
+    name: 'Bikes & Scooters',
     icon: Bike,
     count: 980,
-    description: 'Two-wheelers for quick city travel',
-    color: 'from-rose-500 to-rose-600',
-    bgLight: 'bg-rose-50',
+    description: 'Zippy two-wheelers and touring bikes for quick local errands and solo road trips.',
+    color: 'from-rose-500 to-pink-500',
+    bgLight: 'bg-rose-50/80',
     textColor: 'text-rose-600',
-    startingPrice: 400,
+    startingPrice: '400',
+    popularModel: 'Activa, Classic 350, Himalayan',
   },
 ];
 
 export default function VehicleCategories() {
   return (
-    <section className="py-20 lg:py-28 bg-surface">
+    <section className="py-24 lg:py-32 bg-slate-50/70 border-y border-slate-200/60 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="text-center mb-14">
-          <span className="inline-block px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-electric bg-electric/10 rounded-full mb-4">
-            Browse by Type
-          </span>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-navy mb-4">
-            Vehicle <span className="gradient-text">Categories</span>
+        
+        {/* Section Header with Generous Breathing Room */}
+        <div className="text-center max-w-3xl mx-auto mb-16 lg:mb-20">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-electric bg-electric/10 rounded-full mb-4">
+            <Sparkles className="w-3.5 h-3.5" />
+            <span>Curated Fleet</span>
+          </div>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-navy tracking-tight mb-4">
+            Explore by <span className="gradient-text">Vehicle Category</span>
           </h2>
-          <p className="text-muted text-lg max-w-xl mx-auto">
-            From budget hatchbacks to luxury sedans — find the perfect vehicle for every occasion
+          <p className="text-slate-500 text-base sm:text-lg leading-relaxed">
+            From daily city runabouts to high-end luxury sedans and rugged terrain SUVs, discover the ride that matches your journey.
           </p>
         </div>
 
-        {/* Categories Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        {/* Spacious, Beautiful Grid with breathing room */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
           {categories.map((cat) => (
             <div
               key={cat.name}
-              className="group relative bg-white rounded-2xl p-6 shadow-card hover:shadow-card-hover transition-all duration-300 hover:-translate-y-1 cursor-pointer overflow-hidden"
+              className="group bg-white rounded-2xl p-7 border border-slate-200/80 hover:border-electric/40 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1.5 flex flex-col justify-between cursor-pointer relative overflow-hidden"
             >
-              {/* Gradient corner accent */}
-              <div className={`absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl ${cat.color} opacity-5 rounded-bl-full group-hover:opacity-10 transition-opacity`} />
+              {/* Subtle gradient corner aura */}
+              <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl ${cat.color} opacity-[0.04] group-hover:opacity-[0.1] rounded-bl-full transition-opacity duration-300 pointer-events-none`} />
 
-              <div className="flex items-start gap-4">
-                <div className={`flex-shrink-0 w-14 h-14 ${cat.bgLight} rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
-                  <cat.icon className={`w-7 h-7 ${cat.textColor}`} />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between mb-1">
-                    <h3 className="text-lg font-bold text-navy group-hover:text-electric transition-colors">
+              <div>
+                {/* Header: Icon + Category Name */}
+                <div className="flex items-center gap-4 mb-4">
+                  <div className={`w-14 h-14 ${cat.bgLight} rounded-xl flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform duration-300 shadow-sm`}>
+                    <cat.icon className={`w-7 h-7 ${cat.textColor}`} />
+                  </div>
+                  <div className="min-w-0">
+                    <h3 className="text-lg font-bold text-navy group-hover:text-electric transition-colors truncate">
                       {cat.name}
                     </h3>
-                    <ArrowRight className="w-4 h-4 text-muted opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
-                  </div>
-                  <p className="text-muted text-sm mb-3">{cat.description}</p>
-                  <div className="flex items-center justify-between">
-                    <span className={`text-xs font-semibold ${cat.textColor} ${cat.bgLight} px-2.5 py-1 rounded-md`}>
-                      {cat.count.toLocaleString()} vehicles
-                    </span>
-                    <span className="text-xs text-muted">
-                      from <span className="font-semibold text-navy">₹{cat.startingPrice}</span>/day
-                    </span>
+                    <p className="text-xs text-slate-400 font-medium">
+                      e.g. {cat.popularModel}
+                    </p>
                   </div>
                 </div>
+
+                {/* Description */}
+                <p className="text-slate-500 text-sm leading-relaxed mb-6">
+                  {cat.description}
+                </p>
               </div>
+
+              {/* Bottom Info Bar with comfortable spacing */}
+              <div className="pt-4 border-t border-slate-100 flex items-center justify-between text-xs mt-auto">
+                <span className={`font-semibold ${cat.textColor} ${cat.bgLight} px-3 py-1 rounded-full`}>
+                  {cat.count.toLocaleString()} available
+                </span>
+                <div className="flex items-center gap-1.5">
+                  <span className="text-slate-400">from</span>
+                  <span className="text-base font-extrabold text-navy">₹{cat.startingPrice}</span>
+                  <span className="text-slate-400">/day</span>
+                  <ArrowRight className="w-4 h-4 text-electric opacity-0 -ml-2 group-hover:opacity-100 group-hover:ml-0.5 transition-all duration-200" />
+                </div>
+              </div>
+
             </div>
           ))}
         </div>
+
       </div>
     </section>
   );
