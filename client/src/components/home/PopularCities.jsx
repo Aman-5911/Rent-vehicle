@@ -1,4 +1,5 @@
 import { MapPin, ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const cities = [
   {
@@ -53,7 +54,7 @@ export default function PopularCities() {
         {/* Cities Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {/* First large card */}
-          <div className="sm:col-span-2 lg:col-span-2 lg:row-span-2 group relative rounded-2xl overflow-hidden cursor-pointer h-64 lg:h-auto">
+          <Link to={`/vehicles?city=${encodeURIComponent(cities[0].name)}`} className="sm:col-span-2 lg:col-span-2 lg:row-span-2 group relative block h-64 overflow-hidden rounded-2xl lg:h-auto">
             <img
               src={cities[0].image}
               alt={cities[0].name}
@@ -74,13 +75,14 @@ export default function PopularCities() {
                 </div>
               </div>
             </div>
-          </div>
+          </Link>
 
           {/* Smaller cards */}
           {cities.slice(1).map((city) => (
-            <div
+            <Link
               key={city.name}
-              className="group relative rounded-2xl overflow-hidden cursor-pointer h-48 lg:h-auto"
+              to={`/vehicles?city=${encodeURIComponent(city.name)}`}
+              className="group relative block h-48 overflow-hidden rounded-2xl lg:h-auto"
             >
               <img
                 src={city.image}
@@ -100,7 +102,7 @@ export default function PopularCities() {
                   <ArrowRight className="w-4 h-4 text-electric opacity-0 group-hover:opacity-100 transition-opacity" />
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </div>

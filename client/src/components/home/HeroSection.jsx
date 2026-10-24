@@ -1,13 +1,20 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Search, MapPin, Calendar, Car, ChevronDown, ShieldCheck } from 'lucide-react';
 
 export default function HeroSection() {
+  const navigate = useNavigate();
   const today = new Date().toISOString().split('T')[0];
   const tomorrow = new Date(Date.now() + 86400000).toISOString().split('T')[0];
 
   const [city, setCity] = useState('delhi');
   const [pickupDate, setPickupDate] = useState(today);
   const [returnDate, setReturnDate] = useState(tomorrow);
+
+  function searchVehicles() {
+    const query = new URLSearchParams({ city: city === 'delhi' ? 'Delhi' : city, pickupDate, returnDate });
+    navigate(`/vehicles?${query.toString()}`);
+  }
 
   return (
     <section className="hero-section relative overflow-hidden pt-28 pb-14 sm:pt-32 sm:pb-16">
@@ -99,6 +106,7 @@ export default function HeroSection() {
             <div>
               <button 
                 type="button"
+                onClick={searchVehicles}
                 className="flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-6 py-4 text-sm font-semibold text-white transition-colors duration-200 hover:bg-blue-700 active:bg-blue-800 md:min-w-36"
               >
                 <Search className="w-4 h-4" />

@@ -1,4 +1,5 @@
 import { Car, Bike, Truck, Crown, Zap, ArrowRight, Sparkles } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const categories = [
   {
@@ -91,8 +92,9 @@ export default function VehicleCategories() {
         {/* Spacious, Beautiful Grid with breathing room */}
         <div className="category-grid grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-5">
           {categories.map((cat, index) => (
-            <div
+            <Link
               key={cat.name}
+              to={`/vehicles?${cat.name === 'Electric Vehicles (EV)' ? 'fuel=electric' : `category=${cat.name.startsWith('SUV') ? 'suv' : cat.name.startsWith('Bikes') ? 'bike' : cat.name.startsWith('Hatchback') ? 'hatchback' : cat.name.startsWith('Luxury') ? 'luxury' : 'sedan'}`}`}
               className={`category-card group rounded-2xl p-6 sm:p-7 transition-all duration-300 hover:-translate-y-1.5 flex flex-col justify-between cursor-pointer relative overflow-hidden ${index < 2 ? 'category-card-wide' : ''}`}
             >
               <div className="absolute inset-x-0 top-0 h-px bg-blue-500/40" />
@@ -132,7 +134,7 @@ export default function VehicleCategories() {
                 </div>
               </div>
 
-            </div>
+            </Link>
           ))}
         </div>
 

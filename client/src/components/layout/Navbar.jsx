@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Menu, X, Car, ChevronDown } from 'lucide-react';
+import { Menu, X, Car } from 'lucide-react';
+import { useAuth } from '../../AuthContext';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const { user, signOut } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -50,18 +52,13 @@ export default function Navbar() {
 
           {/* Desktop Auth Buttons */}
           <div className="hidden lg:flex items-center gap-3">
-            <Link
-              to="/login"
-              className="rounded-xl px-5 py-2.5 text-sm font-semibold text-slate-600 transition-colors duration-200 hover:bg-slate-50 hover:text-blue-700"
-            >
-              Log in
-            </Link>
-            <Link
-              to="/register"
-              className="rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-700"
-            >
-              Sign up
-            </Link>
+            {user ? <>
+              <Link to="/dashboard" className="rounded-xl px-4 py-2.5 text-sm font-semibold text-slate-600 transition-colors hover:bg-slate-50 hover:text-blue-700">{user.fullName.split(' ')[0]} · Dashboard</Link>
+              <button onClick={signOut} className="rounded-xl border border-slate-300 px-4 py-2.5 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50">Sign out</button>
+            </> : <>
+              <Link to="/login" className="rounded-xl px-5 py-2.5 text-sm font-semibold text-slate-600 transition-colors duration-200 hover:bg-slate-50 hover:text-blue-700">Log in</Link>
+              <Link to="/register" className="rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-700">Sign up</Link>
+            </>}
           </div>
 
           {/* Mobile menu button */}
@@ -98,20 +95,13 @@ export default function Navbar() {
             </Link>
           ))}
           <div className="flex flex-col gap-2 border-t border-slate-200 pt-3">
-            <Link
-              to="/login"
-              onClick={() => setIsOpen(false)}
-              className="block rounded-xl px-4 py-3 text-center text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50"
-            >
-              Log in
-            </Link>
-            <Link
-              to="/register"
-              onClick={() => setIsOpen(false)}
-              className="block rounded-xl bg-blue-600 px-4 py-3 text-center text-sm font-semibold text-white transition-colors hover:bg-blue-700"
-            >
-              Sign up
-            </Link>
+            {user ? <>
+              <Link to="/dashboard" onClick={() => setIsOpen(false)} className="block rounded-xl px-4 py-3 text-center text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50">Dashboard</Link>
+              <button onClick={() => { setIsOpen(false); signOut(); }} className="block rounded-xl border border-slate-300 px-4 py-3 text-center text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50">Sign out</button>
+            </> : <>
+              <Link to="/login" onClick={() => setIsOpen(false)} className="block rounded-xl px-4 py-3 text-center text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50">Log in</Link>
+              <Link to="/register" onClick={() => setIsOpen(false)} className="block rounded-xl bg-blue-600 px-4 py-3 text-center text-sm font-semibold text-white transition-colors hover:bg-blue-700">Sign up</Link>
+            </>}
           </div>
         </div>
       </div>

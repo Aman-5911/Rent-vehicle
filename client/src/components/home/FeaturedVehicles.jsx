@@ -1,7 +1,10 @@
 import { Star, Fuel, Users, ChevronLeft, ChevronRight, Heart, MapPin, Settings2, Zap } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { api } from '../../api';
+import { useAuth } from '../../AuthContext';
 
-const vehicles = [
+const fallbackVehicles = [
   {
     id: 1,
     name: 'Hyundai Creta',
@@ -19,7 +22,7 @@ const vehicles = [
     id: 2,
     name: 'Maruti Swift',
     type: 'Hatchback',
-    image: 'https://images.unsplash.com/photo-1549317661-bd32c8ce0afa?w=400&h=260&fit=crop&auto=format',
+    image: 'https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=900&h=600&fit=crop&auto=format',
     price: 1200,
     rating: 4.6,
     reviews: 89,
@@ -83,12 +86,53 @@ const vehicles = [
 ];
 
 export default function FeaturedVehicles() {
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const [vehicles, setVehicles] = useState(fallbackVehicles);
   const [startIdx, setStartIdx] = useState(0);
-  const [favorites, setFavorites] = useState([]);
+  const [favorites, setFavorites] = useState(new Set());
   const visibleCount = typeof window !== 'undefined' && window.innerWidth < 768 ? 1 : window.innerWidth < 1024 ? 2 : 3;
+
+  useEffect(() => {
+    let active = true;
+    api('/vehicles?limit=6&sort=rating').then((result) => {
+      if (active && result.vehicles.length) setVehicles(result.vehicles);
+    }).catch(() => {});
+    return () => { active = false; };
+  }, []);
+
+  useEffect(() => {
+    if (!user) {
+      setFavorites(new Set());
+      return;
+    }
+    let active = true;
+    api('/favorites').then((result) => {
+      if (active) setFavorites(new Set(result.vehicles.map((vehicle) => vehicle.id)));
+    }).catch(() => {});
+    return () => { active = false; };
+  }, [user]);
 
   const next = () => setStartIdx((i) => Math.min(i + 1, vehicles.length - visibleCount));
   const prev = () => setStartIdx((i) => Math.max(i - 1, 0));
+
+  async function toggleFavorite(vehicle) {
+    if (!user || typeof vehicle.id !== 'string' || vehicle.id.length !== 24) {
+      navigate('/login', { state: { returnTo: '/vehicles' } });
+      return;
+    }
+    const saved = favorites.has(vehicle.id);
+    try {
+      await api(`/favorites/${vehicle.id}`, { method: saved ? 'DELETE' : 'PUT' });
+      setFavorites((current) => {
+        const next = new Set(current);
+        saved ? next.delete(vehicle.id) : next.add(vehicle.id);
+        return next;
+      });
+    } catch {
+      navigate('/login', { state: { returnTo: '/vehicles' } });
+    }
+  }
 
   return (
     <section className="py-20 lg:py-28 section-featured">
@@ -151,12 +195,12 @@ export default function FeaturedVehicles() {
                   </span>
                   <button
                     type="button"
-                    onClick={() => setFavorites((current) => current.includes(vehicle.id) ? current.filter((id) => id !== vehicle.id) : [...current, vehicle.id])}
-                    aria-label={favorites.includes(vehicle.id) ? `Remove ${vehicle.name} from favorites` : `Add ${vehicle.name} to favorites`}
-                    aria-pressed={favorites.includes(vehicle.id)}
+                    onClick={() => toggleFavorite(vehicle)}
+                    aria-label={favorites.has(vehicle.id) ? `Remove ${vehicle.name} from favorites` : `Add ${vehicle.name} to favorites`}
+                    aria-pressed={favorites.has(vehicle.id)}
                     className="flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 bg-white/95 text-slate-600 shadow-sm transition-colors hover:text-blue-600"
                   >
-                    <Heart className={`h-4 w-4 ${favorites.includes(vehicle.id) ? 'fill-rose-400 text-rose-400' : ''}`} />
+                    <Heart className={`h-4 w-4 ${favorites.has(vehicle.id) ? 'fill-rose-400 text-rose-400' : ''}`} />
                   </button>
                 </div>
                 <span className="absolute bottom-4 left-4 inline-flex items-center gap-1.5 rounded-full border border-white/70 bg-white/95 px-3 py-1.5 text-[11px] font-semibold text-slate-700 shadow-sm">
@@ -195,9 +239,9 @@ export default function FeaturedVehicles() {
                     <span className="text-2xl font-extrabold text-slate-900">₹{vehicle.price.toLocaleString()}</span>
                     <span className="text-slate-400 text-sm">/day</span>
                   </div>
-                  <button className="rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-700">
+                  <Link to={typeof vehicle.id === 'string' && vehicle.id.length === 24 ? `/vehicles/${vehicle.id}` : '/vehicles'} className="rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-700">
                     Book Now
-                  </button>
+                  </Link>
                 </div>
               </div>
             </div>
@@ -206,9 +250,9 @@ export default function FeaturedVehicles() {
 
         {/* View All */}
         <div className="text-center mt-10">
-          <button className="rounded-xl border border-slate-300 px-8 py-3 text-sm font-semibold text-slate-700 transition-colors hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700">
+          <Link to="/vehicles" className="inline-block rounded-xl border border-slate-300 px-8 py-3 text-sm font-semibold text-slate-700 transition-colors hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700">
             View All Vehicles
-          </button>
+          </Link>
         </div>
       </div>
     </section>
