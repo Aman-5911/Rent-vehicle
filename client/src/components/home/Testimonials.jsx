@@ -43,10 +43,10 @@ export default function Testimonials() {
   const t = testimonials[current];
 
   return (
-    <section className="py-20 lg:py-28 bg-surface relative overflow-hidden">
+    <section className="py-20 lg:py-28 relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <span className="inline-block px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-electric bg-electric/10 rounded-full mb-4">
+          <span className="section-kicker inline-block px-4 py-1.5 text-xs font-semibold uppercase tracking-normal rounded-full mb-4">
             Testimonials
           </span>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-navy mb-4">
@@ -58,7 +58,7 @@ export default function Testimonials() {
         </div>
 
         <div className="max-w-4xl mx-auto">
-          <div className="bg-white rounded-3xl p-8 sm:p-12 shadow-card hover:shadow-card-hover transition-all duration-300 relative border border-border/80">
+          <div className="testimonial-card rounded-3xl p-8 sm:p-12 transition-all duration-300 relative border">
             <Quote className="w-16 h-16 text-electric/10 absolute top-8 right-8 pointer-events-none" />
 
             <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 sm:gap-8">

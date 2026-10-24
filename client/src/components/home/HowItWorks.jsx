@@ -26,11 +26,11 @@ const steps = [
 
 export default function HowItWorks() {
   return (
-    <section id="how-it-works" className="py-20 lg:py-28 bg-white">
+    <section id="how-it-works" className="py-20 lg:py-28">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-16">
-          <span className="inline-block px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-electric bg-electric/10 rounded-full mb-4">
+          <span className="section-kicker inline-block px-4 py-1.5 text-xs font-semibold uppercase tracking-normal rounded-full mb-4">
             Simple Process
           </span>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-navy mb-4">
@@ -58,7 +58,7 @@ export default function HowItWorks() {
 
               {/* Icon */}
               <div className="relative mx-auto w-20 h-20 mb-6">
-                <div className={`w-full h-full rounded-2xl bg-gradient-to-br ${step.color} flex items-center justify-center shadow-lg group-hover:shadow-xl group-hover:-translate-y-1 transition-all duration-300`}>
+                  <div className="flex h-full w-full items-center justify-center rounded-2xl bg-blue-600 transition-colors duration-200 group-hover:bg-blue-700">
                   <step.icon className="w-9 h-9 text-white" />
                 </div>
                 {/* Dot connector */}

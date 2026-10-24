@@ -35,11 +35,11 @@ const cities = [
 
 export default function PopularCities() {
   return (
-    <section className="py-20 lg:py-28 bg-white">
+    <section className="py-20 lg:py-28">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-14">
-          <span className="inline-block px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-electric bg-electric/10 rounded-full mb-4">
+          <span className="section-kicker inline-block px-4 py-1.5 text-xs font-semibold uppercase tracking-normal rounded-full mb-4">
             Explore Cities
           </span>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-navy mb-4">

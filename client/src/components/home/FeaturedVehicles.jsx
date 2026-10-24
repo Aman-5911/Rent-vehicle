@@ -1,4 +1,4 @@
-import { Star, Fuel, Users, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Star, Fuel, Users, ChevronLeft, ChevronRight, Heart, MapPin, Settings2, Zap } from 'lucide-react';
 import { useState } from 'react';
 
 const vehicles = [
@@ -84,18 +84,19 @@ const vehicles = [
 
 export default function FeaturedVehicles() {
   const [startIdx, setStartIdx] = useState(0);
+  const [favorites, setFavorites] = useState([]);
   const visibleCount = typeof window !== 'undefined' && window.innerWidth < 768 ? 1 : window.innerWidth < 1024 ? 2 : 3;
 
   const next = () => setStartIdx((i) => Math.min(i + 1, vehicles.length - visibleCount));
   const prev = () => setStartIdx((i) => Math.max(i - 1, 0));
 
   return (
-    <section className="py-20 lg:py-28 bg-surface">
+    <section className="py-20 lg:py-28 section-featured">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between mb-12 gap-4">
           <div>
-            <span className="inline-block px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-electric bg-electric/10 rounded-full mb-4">
+            <span className="section-kicker inline-block px-4 py-1.5 text-xs font-semibold uppercase tracking-normal rounded-full mb-4">
               Top Picks
             </span>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-navy">
@@ -107,7 +108,7 @@ export default function FeaturedVehicles() {
             <button
               onClick={prev}
               disabled={startIdx === 0}
-              className="p-2.5 rounded-xl bg-white border border-border hover:border-electric hover:text-electric disabled:opacity-30 disabled:cursor-not-allowed transition-all shadow-card"
+              className="p-2.5 rounded-xl bg-white/5 border border-white/10 text-white/80 hover:border-electric/60 hover:text-electric disabled:opacity-30 disabled:cursor-not-allowed transition-all"
               aria-label="Previous vehicles"
             >
               <ChevronLeft className="w-5 h-5" />
@@ -115,7 +116,7 @@ export default function FeaturedVehicles() {
             <button
               onClick={next}
               disabled={startIdx >= vehicles.length - visibleCount}
-              className="p-2.5 rounded-xl bg-white border border-border hover:border-electric hover:text-electric disabled:opacity-30 disabled:cursor-not-allowed transition-all shadow-card"
+              className="p-2.5 rounded-xl bg-white/5 border border-white/10 text-white/80 hover:border-electric/60 hover:text-electric disabled:opacity-30 disabled:cursor-not-allowed transition-all"
               aria-label="Next vehicles"
             >
               <ChevronRight className="w-5 h-5" />
@@ -125,64 +126,76 @@ export default function FeaturedVehicles() {
 
         {/* Vehicle Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {vehicles.slice(startIdx, startIdx + 3).map((vehicle) => (
+          {vehicles.slice(startIdx, startIdx + visibleCount).map((vehicle) => (
             <div
               key={vehicle.id}
-              className="group bg-white rounded-2xl overflow-hidden shadow-card hover:shadow-card-hover transition-all duration-300 hover:-translate-y-1"
+              className="vehicle-card group rounded-2xl overflow-hidden transition-shadow duration-300"
             >
-              {/* Image */}
-              <div className="relative h-48 overflow-hidden">
+              <div className="relative h-60 sm:h-64 overflow-hidden">
                 <img
                   src={vehicle.image}
                   alt={vehicle.name}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  className="w-full h-full object-cover group-hover:scale-[1.06] transition-transform duration-700"
                   loading="lazy"
                 />
-                <div className="absolute top-3 left-3">
-                  <span className="px-3 py-1 text-xs font-semibold bg-navy/80 text-white rounded-lg backdrop-blur-sm">
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/45 via-transparent to-black/10" />
+                <div className="absolute top-4 left-4">
+                  <span className="rounded-full bg-white/95 px-3 py-1.5 text-xs font-semibold text-slate-800 shadow-sm">
                     {vehicle.type}
                   </span>
                 </div>
-                <div className="absolute top-3 right-3">
-                  <span className="px-3 py-1 text-xs font-semibold bg-electric/90 text-white rounded-lg backdrop-blur-sm">
-                    {vehicle.city}
+                <div className="absolute top-4 right-4 flex items-center gap-2">
+                  <span className="inline-flex items-center gap-1 rounded-full bg-white/95 px-2.5 py-1.5 text-xs font-bold text-slate-900 shadow-sm">
+                    <Star className="w-3.5 h-3.5 fill-amber-300 text-amber-300" />
+                    {vehicle.rating}
                   </span>
+                  <button
+                    type="button"
+                    onClick={() => setFavorites((current) => current.includes(vehicle.id) ? current.filter((id) => id !== vehicle.id) : [...current, vehicle.id])}
+                    aria-label={favorites.includes(vehicle.id) ? `Remove ${vehicle.name} from favorites` : `Add ${vehicle.name} to favorites`}
+                    aria-pressed={favorites.includes(vehicle.id)}
+                    className="flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 bg-white/95 text-slate-600 shadow-sm transition-colors hover:text-blue-600"
+                  >
+                    <Heart className={`h-4 w-4 ${favorites.includes(vehicle.id) ? 'fill-rose-400 text-rose-400' : ''}`} />
+                  </button>
                 </div>
+                <span className="absolute bottom-4 left-4 inline-flex items-center gap-1.5 rounded-full border border-white/70 bg-white/95 px-3 py-1.5 text-[11px] font-semibold text-slate-700 shadow-sm">
+                  <Zap className="h-3.5 w-3.5 text-blue-600" /> Instant Booking
+                </span>
               </div>
 
-              {/* Content */}
-              <div className="p-5">
-                <div className="flex items-start justify-between mb-3">
-                  <h3 className="text-lg font-bold text-navy group-hover:text-electric transition-colors">
-                    {vehicle.name}
-                  </h3>
-                  <div className="flex items-center gap-1 text-sm">
-                    <Star className="w-4 h-4 text-warning fill-warning" />
-                    <span className="font-semibold text-navy">{vehicle.rating}</span>
-                    <span className="text-muted">({vehicle.reviews})</span>
+              <div className="p-5 sm:p-6">
+                <div className="mb-4 flex items-start justify-between gap-3">
+                  <div>
+                    <h3 className="text-xl font-bold transition-colors group-hover:text-electric">{vehicle.name}</h3>
+                    <p className="mt-1 flex items-center gap-1.5 text-sm text-slate-400">
+                      <MapPin className="h-3.5 w-3.5 text-electric" /> {vehicle.city}
+                      <span className="text-white/25">·</span> {vehicle.reviews} reviews
+                    </p>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-4 text-xs text-muted mb-4">
+                <div className="mb-5 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-slate-300">
                   <span className="flex items-center gap-1">
-                    <Fuel className="w-3.5 h-3.5" />
+                    <Fuel className="w-3.5 h-3.5 text-blue-600" />
                     {vehicle.fuel}
                   </span>
                   <span className="flex items-center gap-1">
-                    <Users className="w-3.5 h-3.5" />
+                    <Users className="w-3.5 h-3.5 text-blue-600" />
                     {vehicle.seats} Seats
                   </span>
-                  <span className="px-2 py-0.5 bg-surface rounded text-xs font-medium">
+                  <span className="flex items-center gap-1">
+                    <Settings2 className="w-3.5 h-3.5 text-blue-600" />
                     {vehicle.transmission}
                   </span>
                 </div>
 
-                <div className="flex items-end justify-between pt-4 border-t border-border/50">
+                <div className="flex items-end justify-between gap-3 border-t border-slate-200 pt-4">
                   <div>
-                    <span className="text-2xl font-extrabold text-navy">₹{vehicle.price.toLocaleString()}</span>
-                    <span className="text-muted text-sm">/day</span>
+                    <span className="text-2xl font-extrabold text-slate-900">₹{vehicle.price.toLocaleString()}</span>
+                    <span className="text-slate-400 text-sm">/day</span>
                   </div>
-                  <button className="px-5 py-2.5 text-sm font-semibold text-white bg-gradient-to-r from-electric to-electric-dark rounded-xl hover:shadow-glow hover:-translate-y-0.5 transition-all duration-300">
+                  <button className="rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-700">
                     Book Now
                   </button>
                 </div>
@@ -193,7 +206,7 @@ export default function FeaturedVehicles() {
 
         {/* View All */}
         <div className="text-center mt-10">
-          <button className="px-8 py-3 text-sm font-semibold text-electric border-2 border-electric rounded-xl hover:bg-electric hover:text-white transition-all duration-300">
+          <button className="rounded-xl border border-slate-300 px-8 py-3 text-sm font-semibold text-slate-700 transition-colors hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700">
             View All Vehicles
           </button>
         </div>

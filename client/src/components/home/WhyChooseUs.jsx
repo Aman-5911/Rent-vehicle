@@ -1,4 +1,4 @@
-import { ShieldCheck, Lock, Headphones, BadgePercent, Sparkles, CheckCircle2 } from 'lucide-react';
+import { ShieldCheck, Lock, Headphones, BadgePercent, CheckCircle2 } from 'lucide-react';
 
 const trustFeatures = [
   {
@@ -29,13 +29,12 @@ const trustFeatures = [
 
 export default function WhyChooseUs() {
   return (
-    <section className="py-24 lg:py-32 bg-white relative overflow-hidden">
+    <section className="trust-section py-20 lg:py-28 relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16 lg:mb-20">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-electric bg-electric/10 rounded-full mb-4">
-            <Sparkles className="w-3.5 h-3.5" />
+          <div className="section-kicker inline-flex items-center gap-2 px-4 py-1.5 text-xs font-bold uppercase tracking-normal rounded-full mb-4">
             <span>Trust & Safety First</span>
           </div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-navy tracking-tight mb-4">
@@ -51,12 +50,12 @@ export default function WhyChooseUs() {
           {trustFeatures.map((feat) => (
             <div
               key={feat.title}
-              className="relative p-7 rounded-2xl bg-slate-50 border border-slate-200/80 hover:border-electric/40 transition-all duration-300 hover:shadow-xl hover:-translate-y-1.5 group flex flex-col justify-between"
+              className="trust-card relative flex flex-col justify-between rounded-xl border p-6 transition-shadow duration-200 group"
             >
               <div>
                 {/* Icon */}
-                <div className="w-13 h-13 rounded-xl bg-white text-electric border border-slate-200/60 flex items-center justify-center group-hover:bg-gradient-to-br group-hover:from-electric group-hover:to-electric-dark group-hover:text-white group-hover:border-transparent transition-all duration-300 shadow-sm mb-6">
-                  <feat.icon className="w-6 h-6" />
+                <div className="trust-icon mb-5 flex h-12 w-12 items-center justify-center rounded-xl border border-blue-100 transition-colors duration-200">
+                  <feat.icon className="w-7 h-7" />
                 </div>
 
                 {/* Title */}
@@ -71,15 +70,31 @@ export default function WhyChooseUs() {
               </div>
 
               {/* Bottom Feature Highlight Tag */}
-              <div className="pt-4 border-t border-slate-200/60 flex items-center gap-1.5 text-xs font-semibold text-slate-600">
-                <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
+              <div className="flex items-center gap-1.5 border-t border-slate-200 pt-4 text-xs font-semibold text-slate-600">
+                <CheckCircle2 className="w-4 h-4 shrink-0 text-blue-600" />
                 <span>{feat.highlight}</span>
               </div>
             </div>
           ))}
         </div>
 
+        <div className="trust-metrics mt-10 grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-slate-200 sm:grid-cols-4">
+          <TrustMetric value="10,000+" label="Verified vehicles" />
+          <TrustMetric value="50,000+" label="Happy customers" />
+          <TrustMetric value="5" label="Major cities" />
+          <TrustMetric value="4.8 ★" label="Average rating" />
+        </div>
+
       </div>
     </section>
+  );
+}
+
+function TrustMetric({ value, label }) {
+  return (
+    <div className="trust-metric px-4 py-5 text-center sm:px-6 sm:py-6">
+      <div className="text-2xl font-bold text-slate-900 sm:text-3xl">{value}</div>
+      <div className="mt-1 text-xs text-slate-400 sm:text-sm">{label}</div>
+    </div>
   );
 }

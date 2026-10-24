@@ -71,12 +71,12 @@ const categories = [
 
 export default function VehicleCategories() {
   return (
-    <section className="py-24 lg:py-32 bg-slate-50/70 border-y border-slate-200/60 relative">
+    <section className="py-20 lg:py-28 border-y border-white/[0.06] relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header with Generous Breathing Room */}
         <div className="text-center max-w-3xl mx-auto mb-16 lg:mb-20">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-electric bg-electric/10 rounded-full mb-4">
+          <div className="section-kicker inline-flex items-center gap-2 px-4 py-1.5 text-xs font-bold uppercase tracking-normal rounded-full mb-4">
             <Sparkles className="w-3.5 h-3.5" />
             <span>Curated Fleet</span>
           </div>
@@ -89,23 +89,22 @@ export default function VehicleCategories() {
         </div>
 
         {/* Spacious, Beautiful Grid with breathing room */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-          {categories.map((cat) => (
+        <div className="category-grid grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-5">
+          {categories.map((cat, index) => (
             <div
               key={cat.name}
-              className="group bg-white rounded-2xl p-7 border border-slate-200/80 hover:border-electric/40 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1.5 flex flex-col justify-between cursor-pointer relative overflow-hidden"
+              className={`category-card group rounded-2xl p-6 sm:p-7 transition-all duration-300 hover:-translate-y-1.5 flex flex-col justify-between cursor-pointer relative overflow-hidden ${index < 2 ? 'category-card-wide' : ''}`}
             >
-              {/* Subtle gradient corner aura */}
-              <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl ${cat.color} opacity-[0.04] group-hover:opacity-[0.1] rounded-bl-full transition-opacity duration-300 pointer-events-none`} />
+              <div className="absolute inset-x-0 top-0 h-px bg-blue-500/40" />
 
               <div>
                 {/* Header: Icon + Category Name */}
                 <div className="flex items-center gap-4 mb-4">
-                  <div className={`w-14 h-14 ${cat.bgLight} rounded-xl flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform duration-300 shadow-sm`}>
-                    <cat.icon className={`w-7 h-7 ${cat.textColor}`} />
+                  <div className="category-icon flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-700 transition-colors duration-200 group-hover:bg-blue-100">
+                    <cat.icon className="h-6 w-6" />
                   </div>
                   <div className="min-w-0">
-                    <h3 className="text-lg font-bold text-navy group-hover:text-electric transition-colors truncate">
+                    <h3 className="text-lg font-bold group-hover:text-electric transition-colors truncate">
                       {cat.name}
                     </h3>
                     <p className="text-xs text-slate-400 font-medium">
@@ -115,19 +114,19 @@ export default function VehicleCategories() {
                 </div>
 
                 {/* Description */}
-                <p className="text-slate-500 text-sm leading-relaxed mb-6">
+                <p className="text-slate-400 text-sm leading-relaxed mb-6">
                   {cat.description}
                 </p>
               </div>
 
               {/* Bottom Info Bar with comfortable spacing */}
-              <div className="pt-4 border-t border-slate-100 flex items-center justify-between text-xs mt-auto">
-                <span className={`font-semibold ${cat.textColor} ${cat.bgLight} px-3 py-1 rounded-full`}>
+              <div className="pt-4 border-t border-white/10 flex items-center justify-between text-xs mt-auto">
+                <span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 font-semibold text-slate-300">
                   {cat.count.toLocaleString()} available
                 </span>
                 <div className="flex items-center gap-1.5">
                   <span className="text-slate-400">from</span>
-                  <span className="text-base font-extrabold text-navy">₹{cat.startingPrice}</span>
+                  <span className="text-base font-extrabold text-white">₹{cat.startingPrice}</span>
                   <span className="text-slate-400">/day</span>
                   <ArrowRight className="w-4 h-4 text-electric opacity-0 -ml-2 group-hover:opacity-100 group-hover:ml-0.5 transition-all duration-200" />
                 </div>

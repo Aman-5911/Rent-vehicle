@@ -11,7 +11,7 @@ import Testimonials from '../components/home/Testimonials';
 
 export default function Home() {
   return (
-    <div className="min-h-screen flex flex-col bg-surface text-navy font-sans antialiased selection:bg-electric selection:text-white">
+    <div className="premium-site min-h-screen flex flex-col font-sans antialiased selection:bg-electric selection:text-white">
       {/* 1. Header / Navbar */}
       <Navbar />
 
