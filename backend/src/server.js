@@ -4,6 +4,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import mongoose from 'mongoose';
 import cookieParser from 'cookie-parser';
+import dns from 'node:dns';
 import { fileURLToPath } from 'node:url';
 import authRoutes from './auth-routes.js';
 import bookingRoutes from './booking-routes.js';
@@ -85,6 +86,12 @@ app.use((err, req, res, next) => {
 // Connect to MongoDB and start server
 async function start() {
   try {
+    const dnsServers = process.env.MONGODB_DNS_SERVERS
+      ?.split(',')
+      .map((server) => server.trim())
+      .filter(Boolean);
+    if (dnsServers?.length) dns.setServers(dnsServers);
+
     await mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/rentwheels', { serverSelectionTimeoutMS: 2000 });
     console.log('✅ MongoDB connected');
   } catch (err) {

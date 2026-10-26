@@ -23,6 +23,13 @@ export function AuthProvider({ children }) {
     return session.user;
   }
 
+  async function signInWithGoogle(credential) {
+    const session = await api('/auth/google', { method: 'POST', body: { credential }, public: true });
+    setAccessToken(session.accessToken);
+    setUser(session.user);
+    return session.user;
+  }
+
   async function signUp(details) {
     const session = await api('/auth/register', { method: 'POST', body: details, public: true });
     setAccessToken(session.accessToken);
@@ -37,7 +44,7 @@ export function AuthProvider({ children }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, loading, signIn, signUp, signOut, setUser }}>
+    <AuthContext.Provider value={{ user, loading, signIn, signInWithGoogle, signUp, signOut, setUser }}>
       {children}
     </AuthContext.Provider>
   );

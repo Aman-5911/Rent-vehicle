@@ -2,13 +2,13 @@
   "name": "rentwheels",
   "version": "1.0.0",
   "private": true,
-  "workspaces": ["client", "server", "shared"],
+  "workspaces": ["frontend", "backend", "shared"],
   "scripts": {
-    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
-    "dev:client": "npm run dev --workspace=client",
-    "dev:server": "npm run dev --workspace=server",
-    "seed": "npm run seed --workspace=server",
-    "build": "npm run build --workspace=client",
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:frontend": "npm run dev --workspace=frontend",
+    "dev:backend": "npm run dev --workspace=backend",
+    "seed": "npm run seed --workspace=backend",
+    "build": "npm run build --workspace=frontend",
     "lint": "eslint . --ext .js,.jsx"
   },
   "devDependencies": {

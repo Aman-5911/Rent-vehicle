@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { Car, ShieldCheck } from 'lucide-react';
 import { useAuth } from '../AuthContext';
@@ -7,14 +7,75 @@ const fieldClass = 'mt-1.5 w-full rounded-lg border border-slate-300 bg-white px
 
 export default function AuthPage({ mode = 'login' }) {
   const isRegister = mode === 'register';
-  const { user, loading, signIn, signUp } = useAuth();
+  const { user, loading, signIn, signInWithGoogle, signUp } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [form, setForm] = useState({ fullName: '', email: '', phone: '', password: '', role: 'customer' });
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [googleReady, setGoogleReady] = useState(false);
+  const googleButtonRef = useRef(null);
+  const googleHandlerRef = useRef(null);
+  const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
   if (!loading && user) return <Navigate to="/dashboard" replace />;
+
+  googleHandlerRef.current = async (credential) => {
+    setError('');
+    setSubmitting(true);
+    try {
+      await signInWithGoogle(credential);
+      const returnTo = location.state?.returnTo;
+      navigate(returnTo?.startsWith('/') && !returnTo.startsWith('//') ? returnTo : '/dashboard', { replace: true });
+    } catch (requestError) {
+      setError(requestError.message);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  useEffect(() => {
+    if (!googleClientId) return undefined;
+    let active = true;
+
+    function renderGoogleButton() {
+      if (!active || !window.google?.accounts?.id || !googleButtonRef.current) return;
+      window.google.accounts.id.initialize({
+        client_id: googleClientId,
+        callback: ({ credential }) => googleHandlerRef.current?.(credential),
+      });
+      window.google.accounts.id.renderButton(googleButtonRef.current, {
+        theme: 'outline',
+        size: 'large',
+        shape: 'rectangular',
+        text: isRegister ? 'signup_with' : 'signin_with',
+        width: googleButtonRef.current.clientWidth,
+      });
+      setGoogleReady(true);
+    }
+
+    const existingScript = document.getElementById('google-identity-services');
+    if (window.google?.accounts?.id) {
+      renderGoogleButton();
+    } else if (existingScript) {
+      existingScript.addEventListener('load', renderGoogleButton, { once: true });
+    } else {
+      const script = document.createElement('script');
+      script.id = 'google-identity-services';
+      script.src = 'https://accounts.google.com/gsi/client';
+      script.async = true;
+      script.defer = true;
+      script.addEventListener('load', renderGoogleButton, { once: true });
+      script.addEventListener('error', () => {
+        if (active) setError('Google sign-in could not be loaded. Check your connection and try again.');
+      }, { once: true });
+      document.head.appendChild(script);
+    }
+
+    return () => {
+      active = false;
+    };
+  }, [googleClientId, isRegister]);
 
   function update(event) {
     setForm((current) => ({ ...current, [event.target.name]: event.target.value }));
@@ -48,6 +109,26 @@ export default function AuthPage({ mode = 'login' }) {
         </div>
         <h1 className="text-2xl font-bold text-slate-900">{isRegister ? 'Join RentWheels' : 'Sign in'}</h1>
         <p className="mt-2 text-sm text-slate-600">{isRegister ? 'Book trusted cars or share your vehicle with local drivers.' : 'Manage your trips, saved vehicles, and listings.'}</p>
+
+        <div className="mt-6">
+          {googleClientId ? (
+            <>
+              <div ref={googleButtonRef} className="min-h-10 w-full" aria-label="Continue with Google" />
+              {!googleReady && <p className="py-3 text-center text-sm text-slate-500">Loading Google sign-in…</p>}
+            </>
+          ) : (
+            <button
+              type="button"
+              onClick={() => setError('Google sign-in is not configured. Set VITE_GOOGLE_CLIENT_ID and GOOGLE_CLIENT_ID to the same Google OAuth client ID.')}
+              className="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+            >
+              Continue with Google
+            </button>
+          )}
+        </div>
+        <div className="my-5 flex items-center gap-3 text-xs text-slate-400">
+          <span className="h-px flex-1 bg-slate-200" /><span>OR</span><span className="h-px flex-1 bg-slate-200" />
+        </div>
 
         <form onSubmit={submit} className="mt-7 space-y-4">
           {isRegister && <>

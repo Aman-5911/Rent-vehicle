@@ -10,9 +10,10 @@ const refreshSessionSchema = new Schema({
 const userSchema = new Schema({
   fullName: { type: String, required: true, trim: true, maxlength: 100 },
   email: { type: String, required: true, unique: true, lowercase: true, trim: true, index: true },
-  phone: { type: String, required: true, trim: true },
-  passwordHash: { type: String, required: true, select: false },
-  role: { type: String, enum: ['customer', 'owner'], default: 'customer', required: true },
+  phone: { type: String, trim: true, default: '' },
+  passwordHash: { type: String, select: false },
+  googleId: { type: String, unique: true, sparse: true, select: false },
+  role: { type: String, enum: ['customer', 'owner', 'admin'], default: 'customer', required: true },
   favorites: [{ type: Schema.Types.ObjectId, ref: 'Vehicle' }],
   refreshSessions: [refreshSessionSchema],
 }, { timestamps: true });

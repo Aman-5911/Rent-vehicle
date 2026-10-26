@@ -3,10 +3,12 @@ import argon2 from 'argon2';
 import jwt from 'jsonwebtoken';
 import mongoose from 'mongoose';
 import { Router } from 'express';
+import { OAuth2Client } from 'google-auth-library';
 import { User } from './models.js';
 import { ApiError, asyncRoute, createAccessToken, getRefreshSecret, requireAuth } from './middleware.js';
 
 const router = Router();
+const googleClient = new OAuth2Client();
 const COOKIE_NAME = 'rentwheels_refresh';
 const REFRESH_DAYS = 7;
 
@@ -95,8 +97,55 @@ router.post('/login', asyncRoute(async (req, res) => {
   const password = typeof req.body?.password === 'string' ? req.body.password : '';
   const user = await User.findOne({ email }).select('+passwordHash');
 
-  if (!user || !await argon2.verify(user.passwordHash, password)) {
+  if (!user?.passwordHash || !await argon2.verify(user.passwordHash, password)) {
     throw new ApiError(401, 'INVALID_CREDENTIALS', 'Email or password is incorrect.');
+  }
+
+  const session = await createSession(user, res);
+  res.json({ success: true, data: session });
+}));
+
+router.post('/google', asyncRoute(async (req, res) => {
+  if (!process.env.GOOGLE_CLIENT_ID) {
+    throw new ApiError(503, 'GOOGLE_AUTH_NOT_CONFIGURED', 'Google sign-in is not configured.');
+  }
+
+  const credential = typeof req.body?.credential === 'string' ? req.body.credential : '';
+  if (!credential) throw new ApiError(400, 'GOOGLE_CREDENTIAL_REQUIRED', 'Google sign-in did not return a credential.');
+
+  let payload;
+  try {
+    const ticket = await googleClient.verifyIdToken({
+      idToken: credential,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+    payload = ticket.getPayload();
+  } catch {
+    throw new ApiError(401, 'INVALID_GOOGLE_CREDENTIAL', 'Google sign-in could not be verified. Try again.');
+  }
+
+  if (!payload?.sub || !payload.email || payload.email_verified !== true) {
+    throw new ApiError(401, 'UNVERIFIED_GOOGLE_ACCOUNT', 'Use a Google account with a verified email address.');
+  }
+
+  const email = payload.email.trim().toLowerCase();
+  let user = await User.findOne({ googleId: payload.sub }).select('+googleId');
+  if (!user) {
+    user = await User.findOne({ email }).select('+googleId');
+    if (user?.googleId && user.googleId !== payload.sub) {
+      throw new ApiError(409, 'GOOGLE_ACCOUNT_MISMATCH', 'This email is linked to a different Google account.');
+    }
+  }
+
+  if (!user) {
+    user = await User.create({
+      fullName: (payload.name?.trim() || payload.given_name?.trim() || 'Google User').slice(0, 100),
+      email,
+      googleId: payload.sub,
+    });
+  } else if (!user.googleId) {
+    user.googleId = payload.sub;
+    await user.save();
   }
 
   const session = await createSession(user, res);

@@ -4,7 +4,7 @@
 
 | Feature | Status | Notes |
 |---------|--------|-------|
-| Project Setup & Monorepo | Implemented | Monorepo structure with client, server, shared |
+| Project Setup & Monorepo | Implemented | Monorepo structure with frontend, backend, shared |
 | MongoDB Connection | Implemented | Local default URI; health check and clear 503 when unavailable |
 | Design System | Implemented | Light slate surfaces, blue accents, Inter font |
 | Homepage (all sections) | Implemented | All 9 sections per spec section 3 |
