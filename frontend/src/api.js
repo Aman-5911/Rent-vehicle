@@ -46,7 +46,7 @@ export async function refreshAccessToken() {
   if (!refreshPromise) {
     refreshPromise = sendRequest('/auth/refresh', { method: 'POST', public: true }, false)
       .then((data) => {
-        setAccessToken(data.accessToken);
+        setAccessToken(data?.accessToken);
         return data;
       })
       .finally(() => { refreshPromise = null; });

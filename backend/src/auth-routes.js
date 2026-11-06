@@ -154,21 +154,21 @@ router.post('/google', asyncRoute(async (req, res) => {
 
 router.post('/refresh', asyncRoute(async (req, res) => {
   const token = req.cookies?.[COOKIE_NAME];
-  if (!token) throw new ApiError(401, 'REFRESH_REQUIRED', 'Sign in to continue.');
+  if (!token) return res.json({ success: true, data: null });
 
   let payload;
   try {
     payload = jwt.verify(token, getRefreshSecret(), { issuer: 'rentwheels-api' });
   } catch {
     res.clearCookie(COOKIE_NAME, refreshCookieOptions());
-    throw new ApiError(401, 'INVALID_REFRESH_TOKEN', 'Your session has expired. Sign in again.');
+    return res.json({ success: true, data: null });
   }
 
   const tokenHash = hashToken(token);
   const user = await User.findOne({ _id: payload.sub, 'refreshSessions.tokenHash': tokenHash });
   if (!user) {
     res.clearCookie(COOKIE_NAME, refreshCookieOptions());
-    throw new ApiError(401, 'INVALID_REFRESH_TOKEN', 'Your session has expired. Sign in again.');
+    return res.json({ success: true, data: null });
   }
 
   user.refreshSessions = user.refreshSessions.filter((session) => session.tokenHash !== tokenHash);

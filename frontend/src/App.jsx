@@ -12,7 +12,7 @@ import { AuthProvider } from './AuthContext';
 export default function App() {
   return (
     <AuthProvider>
-      <BrowserRouter>
+      <BrowserRouter basename={import.meta.env.BASE_URL}>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/vehicles" element={<BrowseVehicles />} />

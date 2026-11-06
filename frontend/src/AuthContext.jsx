@@ -10,7 +10,7 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     let active = true;
     refreshAccessToken()
-      .then((session) => active && setUser(session.user))
+      .then((session) => active && setUser(session?.user || null))
       .catch(() => active && setUser(null))
       .finally(() => active && setLoading(false));
     return () => { active = false; };
